@@ -74,7 +74,7 @@ def check_status(qrcode, items):
             else:
                 print(f"Error checking status: {response.status_code}", response.json())
 
-        time.sleep(8)
+            time.sleep(8)
 
     print(f"Current items: {items}")
     if len(items) == 2:
