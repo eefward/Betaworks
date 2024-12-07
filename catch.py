@@ -40,15 +40,15 @@ def request_qr_code():
 items = []
 
 
-def check_status(qrcode, items):
+def check_status(qrcode, items, max_attempts=3):
     """
-    Manage the QR code lifecycle by refreshing it every 30 seconds
-    and activating transcription when NFC is scanned.
+    Manage the QR code lifecycle by refreshing it up to `max_attempts` times
+    and activating transcription when NFC is scanned. Continue scanning 
+    until the `items` list has 5 elements.
     """
-    while True:
-        
+    while len(items) < 5:
         print("Requesting QR Code...")
-        #qrcode = request_qr_code()
+        # qrcode = request_qr_code()  # Uncomment if you have a function to generate QR codes
         if not qrcode:
             print("Failed to create QR code. Retrying...")
             time.sleep(1)
@@ -57,28 +57,46 @@ def check_status(qrcode, items):
         payload = {"code": qrcode}
         start_time = time.time()
         timeout = 180  # QR code timeout in seconds
+        attempts = 0  # Track QR code retries
 
-        while time.time() - start_time < timeout:
-            response = requests.post(API_STATUS_CHECK_URL, data=payload)
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("message") == "true":
-                    nfc_tag = data.get("nfc_tag")
-                    product_name = data.get("product_name")
-                    print(f"NFC Tag Scanned: {nfc_tag}")
-                    print(f"Product Name: {product_name}")
-                    with lock:  # Prevent overlapping NFC actions
-                        if product_name.lower() == "apple":
-                            items.append("apple")
-                            return check_status(qrcode, items)
-                        elif product_name.lower() == "mushroom":
-                            items.append("mushroom")
-                            return check_status(qrcode, items)
+        while attempts < max_attempts:
+            while time.time() - start_time < timeout:
+                response = requests.post(API_STATUS_CHECK_URL, data=payload)
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("message") == "true":
+                        nfc_tag = data.get("nfc_tag")
+                        product_name = data.get("product_name")
+                        print(f"NFC Tag Scanned: {nfc_tag}")
+                        print(f"Product Name: {product_name}")
+                        print(items)
+                        with lock:  # Prevent overlapping NFC actions
+                            if product_name.lower() == "apple":
+                                items.append("apple")
+                            elif product_name.lower() == "mushroom":
+                                items.append("mushroom")
+                            else:
+                                print(f"Unrecognized product: {product_name}")
+                        break  # Exit the timeout loop to refresh the QR code
+                    else:
+                        print("Waiting for a valid NFC scan...")
                 else:
-                    print("Waiting for a valid NFC scan...")
+                    print(f"Error checking status: {response.status_code}", response.json())
+                time.sleep(1)
             else:
-                print(f"Error checking status: {response.status_code}", response.json())
-            time.sleep(1)
+                # Increment attempts after QR code timeout
+                attempts += 1
+                print(f"QR code attempt {attempts} of {max_attempts} failed.")
+
+            if attempts >= max_attempts:
+                print("Max attempts reached for current QR code. Requesting a new one.")
+                break
+
+        print(f"Current items: {items}")
+        if len(items) >= 5:
+            print("Successfully scanned 5 items. Exiting.")
+            break
+
 
 qrcode = request_qr_code()
 print(check_status(qrcode, items))
