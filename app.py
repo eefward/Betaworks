@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, redirect
 from flask_session import Session
-import requests
-import sqlite3
 from catch import check_status, request_qr_code
 
 app = Flask(__name__)
