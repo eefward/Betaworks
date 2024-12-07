@@ -36,15 +36,17 @@ def request_qr_code():
     else:
         print("Failed to generate QR code:", response.json())
         return None
+    
+items = []
 
-def check_status():
+
+def check_status(qrcode, items):
     """
     Manage the QR code lifecycle by refreshing it every 30 seconds
     and activating transcription when NFC is scanned.
     """
     while True:
-        items = []
-        qrcode = request_qr_code()
+        
         print("Requesting QR Code...")
         #qrcode = request_qr_code()
         if not qrcode:
@@ -54,7 +56,7 @@ def check_status():
 
         payload = {"code": qrcode}
         start_time = time.time()
-        timeout = 30  # QR code timeout in seconds
+        timeout = 180  # QR code timeout in seconds
 
         while time.time() - start_time < timeout:
             response = requests.post(API_STATUS_CHECK_URL, data=payload)
@@ -67,18 +69,16 @@ def check_status():
                     print(f"Product Name: {product_name}")
                     with lock:  # Prevent overlapping NFC actions
                         if product_name.lower() == "apple":
-                            items = ["apples"]
-                            return qrcode, items
+                            items.append("apple")
+                            return check_status(qrcode, items)
                         elif product_name.lower() == "mushroom":
-                            items = ["mushroom"]
-                            return qrcode, items
+                            items.append("mushroom")
+                            return check_status(qrcode, items)
                 else:
                     print("Waiting for a valid NFC scan...")
             else:
                 print(f"Error checking status: {response.status_code}", response.json())
-            time.sleep(5)
+            time.sleep(1)
 
-            return qrcode, items
-
-request_qr_code()
-check_status()
+qrcode = request_qr_code()
+print(check_status(qrcode, items))
