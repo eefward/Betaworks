@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session 
 from flask_session import Session
+import requests
 
 app = Flask(__name__)
 
@@ -11,9 +12,13 @@ Session(app)
 def home():
   return render_template("index.html")
 
-@app.route("/", methods=["GET", "POST"])
-def apple():
-  return render_template("index.html")
+@app.route("/events", methods=["GET", "POST"])
+def events():
+  return render_template("events.html")
+
+@app.route("/host", methods=["GET", "POST"])
+def host():
+  return render_template("host.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

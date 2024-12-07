@@ -1,0 +1,10 @@
+{% extends "template.html" %}
+
+{% block title %} Host {% endblock %}
+
+{% block body %} 
+  <form action="/host" method="post">
+    <button type="submit">host</button>
+  </form>
+  <a href="/"><button>back</button></a>
+{% endblock %}
