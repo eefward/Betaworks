@@ -71,9 +71,9 @@ def check_status(qrcode, items, max_attempts=3):
                         print(f"Product Name: {product_name}")
                         print(items)
                         with lock:  # Prevent overlapping NFC actions
-                            if product_name.lower() == "apple":
+                            if product_name.lower() == "apple" and "apple" not in items:
                                 items.append("apple")
-                            elif product_name.lower() == "mushroom":
+                            elif product_name.lower() == "mushroom" and "mushroom" not in items:
                                 items.append("mushroom")
                             else:
                                 print(f"Unrecognized product: {product_name}")
@@ -82,7 +82,7 @@ def check_status(qrcode, items, max_attempts=3):
                         print("Waiting for a valid NFC scan...")
                 else:
                     print(f"Error checking status: {response.status_code}", response.json())
-                time.sleep(1)
+                time.sleep(8)
             else:
                 # Increment attempts after QR code timeout
                 attempts += 1
@@ -91,7 +91,7 @@ def check_status(qrcode, items, max_attempts=3):
             if attempts >= max_attempts:
                 print("Max attempts reached for current QR code. Requesting a new one.")
                 break
-
+            time.sleep(5)
         print(f"Current items: {items}")
         if len(items) >= 5:
             print("Successfully scanned 5 items. Exiting.")
@@ -99,4 +99,4 @@ def check_status(qrcode, items, max_attempts=3):
 
 
 qrcode = request_qr_code()
-print(check_status(qrcode, items))
+print(check_status(qrcode, items, 3))
