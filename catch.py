@@ -39,7 +39,6 @@ def request_qr_code():
     
 items = []
 
-
 def check_status(qrcode, items):
     """
     Manage the QR code lifecycle by refreshing it up to `max_attempts` times
@@ -49,12 +48,12 @@ def check_status(qrcode, items):
     while len(items) < 2:
         if not qrcode:
             print("Failed to create QR code. Retrying...")
-            time.sleep(1)
+            time.sleep(5)
             continue
 
         payload = {"code": qrcode}
         start_time = time.time()
-        timeout = 30  # QR code timeout in seconds
+        timeout = 31  # QR code timeout in seconds
 
         while time.time() - start_time < timeout:
             response = requests.post(API_STATUS_CHECK_URL, data=payload)
@@ -84,7 +83,3 @@ def check_status(qrcode, items):
         print("You ran out of time.")
 
     return items
-
-
-qrcode = request_qr_code()
-print(check_status(qrcode, items))
