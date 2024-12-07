@@ -4,7 +4,23 @@
 
 {% block body %} 
   <form action="/host" method="post">
+    Date of event: <input name="date" type="date" required>
+    <br>
+    Start time: <input name="start" placeholder="7 am" required>
+    <br>
+    End time: <input name="end" placeholder="7 pm" required>
+    <br>
+    Location: <input name="location" placeholder="1234 South 100th" required> 
+    <br>
+    <input name="desc" placeholder="description" required>
+    <br>
     <button type="submit">host</button>
   </form>
   <a href="/"><button>back</button></a>
+
+  <!-- copied from previous project -->
+  <script>
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementsByName("date")[0].setAttribute('min', today);
+  </script>
 {% endblock %}
