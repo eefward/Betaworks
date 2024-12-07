@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session 
 from flask_session import Session
 import requests
+from catch import check_status, request_qr_code
 
 app = Flask(__name__)
 
