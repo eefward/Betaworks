@@ -43,8 +43,10 @@ def check_status():
     and activating transcription when NFC is scanned.
     """
     while True:
-        print("Requesting QR Code...")
+        items = []
         qrcode = request_qr_code()
+        print("Requesting QR Code...")
+        #qrcode = request_qr_code()
         if not qrcode:
             print("Failed to create QR code. Retrying...")
             time.sleep(1)
@@ -64,18 +66,21 @@ def check_status():
                     print(f"NFC Tag Scanned: {nfc_tag}")
                     print(f"Product Name: {product_name}")
                     with lock:  # Prevent overlapping NFC actions
-                        if product_name.lower() == "start recording":
-                            print("Start Recording Action Triggered!")
-                            transcription_active.set()  # Activate transcription
-                        elif product_name.lower() in ["stop recording", "stop recoring"]:
-                            print("Stop Recording Action Triggered!")
-                            transcription_active.clear()  # Stop transcription
-                            return  # Exit the QR code loop
+                        if product_name.lower() == "apple":
+                            print("Apple")
+                            items = ["apples"]
+                            return qrcode, items
+                        elif product_name.lower() == "mushroom":
+                            print("Mushroom")
+                            items = ["mushroom"]
+                            return qrcode, items
                 else:
                     print("Waiting for a valid NFC scan...")
             else:
-                print("Error checking status:", response.json())
+                print(f"Error checking status: {response.status_code}", response.json())
             time.sleep(5)
+
+        return qrcode, items
 
 request_qr_code()
 check_status()

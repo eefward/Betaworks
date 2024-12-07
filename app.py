@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect
 from flask_session import Session
 import requests
 import sqlite3
+from catch import check_status
+
 
 from functions import create_db
 
@@ -20,7 +22,7 @@ def home():
 
 @app.route("/events", methods=["GET", "POST"])
 def events():
-  return render_template("events.html")
+  return render_template("events.html", apple = "spplr")
 
 @app.route("/host", methods=["GET", "POST"])
 def host():
