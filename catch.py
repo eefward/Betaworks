@@ -67,9 +67,11 @@ def check_status():
                     print(f"Product Name: {product_name}")
                     with lock:  # Prevent overlapping NFC actions
                         if product_name.lower() == "apple":
+                            print("Apple")
                             items = ["apples"]
                             return qrcode, items
                         elif product_name.lower() == "mushroom":
+                            print("Mushroom")
                             items = ["mushroom"]
                             return qrcode, items
                 else:
@@ -78,7 +80,7 @@ def check_status():
                 print(f"Error checking status: {response.status_code}", response.json())
             time.sleep(5)
 
-            return qrcode, items
+        return qrcode, items
 
 request_qr_code()
 check_status()
