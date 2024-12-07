@@ -47,8 +47,6 @@ def check_status(qrcode, items):
     until the `items` list has 5 elements.
     """
     while len(items) < 2:
-        print("Requesting QR Code...")
-        # qrcode = request_qr_code()  # Uncomment if you have a function to generate QR codes
         if not qrcode:
             print("Failed to create QR code. Retrying...")
             time.sleep(1)
@@ -74,8 +72,6 @@ def check_status(qrcode, items):
                         elif product_name.lower() == "mushroom" and "mushroom" not in items:
                             items.append("mushroom")
                     break  # Exit the timeout loop to refresh the QR code
-                else:
-                    print("Waiting for a valid NFC scan...")
             else:
                 print(f"Error checking status: {response.status_code}", response.json())
 
