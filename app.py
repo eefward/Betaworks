@@ -15,7 +15,7 @@ def home():
 
 @app.route("/events", methods=["GET", "POST"])
 def events():
-  return render_template("events.html")
+  return render_template("events.html", apple = "spplr")
 
 @app.route("/host", methods=["GET", "POST"])
 def host():
