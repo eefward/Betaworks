@@ -42,9 +42,9 @@ def check_status():
     Manage the QR code lifecycle by refreshing it every 30 seconds
     and activating transcription when NFC is scanned.
     """
+    print("Requesting QR Code...")
+    qrcode = request_qr_code()
     while True:
-        print("Requesting QR Code...")
-        qrcode = request_qr_code()
         if not qrcode:
             print("Failed to create QR code. Retrying...")
             time.sleep(1)
@@ -52,7 +52,7 @@ def check_status():
 
         payload = {"code": qrcode}
         start_time = time.time()
-        timeout = 30  # QR code timeout in seconds
+        timeout = 30 
 
         while time.time() - start_time < timeout:
             response = requests.post(API_STATUS_CHECK_URL, data=payload)
@@ -64,13 +64,9 @@ def check_status():
                     print(f"NFC Tag Scanned: {nfc_tag}")
                     print(f"Product Name: {product_name}")
                     with lock:  # Prevent overlapping NFC actions
-                        if product_name.lower() == "start recording":
-                            print("Start Recording Action Triggered!")
-                            transcription_active.set()  # Activate transcription
-                        elif product_name.lower() in ["stop recording", "stop recoring"]:
-                            print("Stop Recording Action Triggered!")
-                            transcription_active.clear()  # Stop transcription
-                            return  # Exit the QR code loop
+                        if product_name.lower() == "apple":
+                            print("Got Apple")
+                            
                 else:
                     print("Waiting for a valid NFC scan...")
             else:
