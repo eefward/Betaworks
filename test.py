@@ -2,18 +2,14 @@ import requests
 import time
 import webbrowser
 import threading
-import assemblyai as aai
 
 # Causality API credentials
-API_KEY = "$2y$10$C.IvXuRfZAGt83YHcDTJH.92nB/InfS4ZfF0H0BIe25jKmzw3A2h6"
-API_TOKEN = "XfJhqj07"
+API_KEY = "$2y$10$oyet6Sk18eJy.WA0H3RyYeuHwVnOvWbXXjp0lNlVPjw0bx6aoT9u6"
+API_TOKEN = "R7PAY7aR"
 
 # Causality API endpoints
 REQUEST_QR_CODE_URL = "https://causality.xyz/api/requestQrCode"
 API_STATUS_CHECK_URL = "https://causality.xyz/api/apiStatusCheck"
-
-# AssemblyAI API key
-aai.settings.api_key = "db64f091a37e454982cfbff54d76621f"
 
 # Shared state
 transcription_active = threading.Event()
@@ -80,3 +76,6 @@ def check_status():
             else:
                 print("Error checking status:", response.json())
             time.sleep(5)
+
+request_qr_code()
+check_status()
