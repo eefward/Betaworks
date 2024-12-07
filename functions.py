@@ -1,6 +1,6 @@
 import sqlite3
 
-con = sqlite3.connect("events", check_same_thread=False)
+con = sqlite3.connect("events.db", check_same_thread=False)
 cur = con.cursor()
 
 def create_db():

@@ -12,7 +12,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-con = sqlite3.connect("events", check_same_thread=False)
+con = sqlite3.connect("events.db", check_same_thread=False)
 cur = con.cursor()
 create_db()
 
@@ -39,6 +39,10 @@ def host():
      con.commit()
      return redirect("/")
   return render_template("host.html")
+
+@app.route("/game", methods=["GET", "POST"])
+def game():
+   return render_template("game.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
