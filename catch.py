@@ -73,8 +73,8 @@ def check_status(qrcode, items):
                     break  # Exit the timeout loop to refresh the QR code
             else:
                 print(f"Error checking status: {response.status_code}", response.json())
-
             time.sleep(8)
+        time.sleep(3)
 
     print(f"Current items: {items}")
     if len(items) == 2:
